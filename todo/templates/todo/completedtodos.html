@@ -1,0 +1,24 @@
+{% extends 'todo/base.html' %}
+
+{% block content %}
+
+Completed task
+
+<ul>
+	{% for todo in todos %}
+	
+	<!-- Данные блоки if проверяют наличие элемента important и memo, и в случае их наличия тег b будет на переменной important, а в случае memo дефис -->
+
+	<li>
+		<a href="{% url 'viewtodo' todo.id %}">
+			{% if todo.important %}<b>{% endif %}
+			{{ todo.title }}
+			{% if todo.important %}</b>{% endif %}
+			{% if todo.memo %} - {{ todo.memo }} {% endif %}
+	    	{{ todo.datecomplited|date:'M j Y H:i' }}
+	    </a>
+	</li>
+	{% endfor %}
+</ul>
+
+{% endblock %}
