@@ -2,25 +2,50 @@
 
 {% block content %}
 
-{{ error }}
+<div class="todo-details">
+  {% if error %}
+    <p class="error-message">{{ error }}</p>
+  {% endif %}
 
-{{ todo.title }}
+  <h2>{{ todo.title }}</h2>
+  
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="{{ form.title.id_for_label }}">Заголовок:</label>
+      {{ form.title }}
+    </div>
+    <div class="form-group">
+      <label for="{{ form.memo.id_for_label }}">Описание:</label>
+      {{ form.memo }}
+    </div>
+    <div class="form-group">
+      <label class="custom-checkbox">
+        {{ form.important }}
+        <span class="checkmark"></span>
+        Важно
+      </label>
+    </div>
 
-<form method="POST">
-	{% csrf_token %}
-	{{ form.as_p }}
-	<button type="submit">Save</button>
-</form>
+    <p>
+      {% if todo.important %}<b>{% endif %}
+      {{ todo.title }}
+      {% if todo.important %}</b>{% endif %}
+      {% if todo.memo %} - {{ todo.memo }} {% endif %} {{ todo.created }}
+    </p>
 
-<form method="POST" action="{% url 'completetodo' todo.id %}">
-	{% csrf_token %}
-	<button type="submit">Complete</button>
-</form>
+    <button type="submit" class="btn-submit">Сохранить</button>
+  </form>
 
-<form method="POST" action="{% url 'deletetodo' todo.id %}">
-	{% csrf_token %}
-	<button type="submit">Delete</button>
-</form>
+  <form method="POST" action="{% url 'completetodo' todo.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-complete">Цель достигнута!</button>
+  </form>
 
+  <form method="POST" action="{% url 'deletetodo' todo.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-delete">Удалить</button>
+  </form>
+</div>
 
 {% endblock %}

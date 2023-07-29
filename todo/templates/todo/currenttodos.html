@@ -3,19 +3,27 @@
 {% block content %}
 
 <ul>
-	{% for todo in todos %}
-	
-	<!-- Данные блоки if проверяют наличие элемента important и memo, и в случае их наличия тег b будет на переменной important, а в случае memo дефис -->
-
-	<li>
-		<a href="{% url 'viewtodo' todo.id %}">
-			{% if todo.important %}<b>{% endif %}
-			{{ todo.title }}
-			{% if todo.important %}</b>{% endif %}
-			{% if todo.memo %} - {{ todo.memo }} {% endif %}
-	    </a>
-	</li>
-	{% endfor %}
+  {% if todos %}
+    <p>Ваши цели:</p>
+    {% for todo in todos %}
+      {% if todo.important %}
+        <li class="important">
+      {% else %}
+        <li>
+      {% endif %}
+      <a href="{% url 'viewtodo' todo.id %}">
+        {% if todo.important %}<div>{% endif %}
+        {{ todo.title }}
+        {% if todo.important %}{% endif %}
+        {% if todo.memo %} - {{ todo.memo }} {% endif %}
+        {% if todo.important %}</div>{% endif %}
+      </a>
+      </li>
+    {% endfor %}
+  {% else %}
+    <p>Вы ещё не поставили себе цель, или уже выполнили поставленные перед собой цели!</p>
+  {% endif %}
 </ul>
+
 
 {% endblock %}

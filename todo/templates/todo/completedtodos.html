@@ -2,8 +2,8 @@
 
 {% block content %}
 
-Completed task
-
+<h2>Завершённые задачи</h2>
+<h3>Поздравяю! Вы выполнили {{ todos.count }} цели(ей)!</h3>
 <ul>
 	{% for todo in todos %}
 	
@@ -11,11 +11,13 @@ Completed task
 
 	<li>
 		<a href="{% url 'viewtodo' todo.id %}">
-			{% if todo.important %}<b>{% endif %}
-			{{ todo.title }}
-			{% if todo.important %}</b>{% endif %}
-			{% if todo.memo %} - {{ todo.memo }} {% endif %}
-	    	{{ todo.datecomplited|date:'M j Y H:i' }}
+			<p><u>Я поставил себе цель - {{ todo.created|date:'M j Y' }}</u></p>
+				{% if todo.important %}<b>{% endif %}
+				{{ todo.title }}
+				{% if todo.important %}</b>{% endif %}
+				{% if todo.memo %} - {{ todo.memo }} {% endif %}
+			<p class="festive-date">Дата завершения - {{ todo.datecomplited|date:'M j Y' }}</p>
+
 	    </a>
 	</li>
 	{% endfor %}

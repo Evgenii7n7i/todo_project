@@ -15,8 +15,8 @@ def home(request):
     '''
     Функция домашней страницы
     '''
-
-    return render(request, 'todo/home.html')
+    title = 'Домашняя страница'
+    return render(request, 'todo/home.html', {'title': title})
 
 
 def signupuser(request):
@@ -24,9 +24,11 @@ def signupuser(request):
     Функция регистрации пользователя
     '''
 
+    title = 'Регистрация'
 	# Если запрос гет то:
+    
     if request.method == 'GET':
-        return render(request, 'todo/signupuser.html', {'form': UserCreationForm})
+        return render(request, 'todo/signupuser.html', {'form': UserCreationForm, 'title': title})
 
     else:
     	# Если запрос пост, то:
@@ -42,7 +44,7 @@ def signupuser(request):
         else:
             # Если пароли не совпадут, то:
             return render(request, 'todo/signupuser.html', 
-	    	{'form': UserCreationForm(), 'error': 'Пароли не совпадают'})
+	    	{'form': UserCreationForm(), 'error': 'Пароли не совпадают', 'title': title})
 
 
 
@@ -51,10 +53,11 @@ def loginuser(request):
     Функция входа пользователя
     '''
 
+    title = 'Вход'
     # Если запрос гет то:
     if request.method == 'GET':
         return render(request, 'todo/loginuser.html', 
-            {'form': AuthenticationForm()})
+            {'form': AuthenticationForm(), 'title': title})
 
     else:
         # Если запрос пост, то:
@@ -63,7 +66,7 @@ def loginuser(request):
         
         # Если пользователь не определён:
         if user is None:
-            return render(request, 'todo/loginuser.html', {'form': AuthenticationForm(), 'error': 'User and pass did not'})
+            return render(request, 'todo/loginuser.html', {'form': AuthenticationForm(), 'error': 'User and pass did not', 'title': title})
         
         # Если пользователь определён:
         else:
@@ -87,8 +90,10 @@ def createtodo(request):
     '''
     Функция для отображения модели на сайте 
     '''
+
+    title = 'Добавить задание'
     if request.method == 'GET':
-        return render(request, 'todo/createtodo.html', {'form': TodoForm()})
+        return render(request, 'todo/createtodo.html', {'form': TodoForm(), 'title': title})
 
     else:
         try:
@@ -101,7 +106,7 @@ def createtodo(request):
             return redirect('currenttodos')
         except ValueError:
             return render(request, 'todo/createtodo.html', 
-                {'form': TodoForm(), 'error': 'Превышено допустимое количество символов!'})
+                {'form': TodoForm(), 'error': 'Превышено допустимое количество символов!', 'title': title})
 
 
 @login_required
@@ -115,7 +120,8 @@ def currenttodos(request):
     '''
 
     todos = Todo.objects.filter(user=request.user, datecomplited__isnull=True)
-    context = {'todos': todos}
+    title = 'Мои задания'
+    context = {'todos': todos, 'title': title}
     return render(request, 'todo/currenttodos.html', context)
 
 
@@ -130,7 +136,8 @@ def completedtodos(request):
     '''
 
     todos = Todo.objects.filter(user=request.user, datecomplited__isnull=False).order_by('-datecomplited')
-    context = {'todos': todos}
+    title = 'Завершённые зачачи'
+    context = {'todos': todos, 'title': title}
     return render(request, 'todo/completedtodos.html', context)    
 
 
@@ -146,10 +153,11 @@ def viewtodo(request, todo_pk):
     '''
     
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+    title = 'Текущее задание'
 
     if request.method == 'GET':
         form = TodoForm(instance=todo)
-        context = {'todo': todo, 'form': form}
+        context = {'todo': todo, 'form': form, 'title': title}
         return render(request, 'todo/viewtodo.html', context)
 
     else:
@@ -159,7 +167,7 @@ def viewtodo(request, todo_pk):
             return redirect('currenttodos')
         except ValueError:
             error = 'Информация введена не корректно!!!'
-            context = {'todo': todo, 'error': error, 'form': form}
+            context = {'todo': todo, 'error': error, 'form': form, 'title': title}
             return render(request, 'todo/viewtodo.html', context)
 
 
